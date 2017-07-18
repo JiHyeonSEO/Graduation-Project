@@ -14,7 +14,6 @@ import org.biojava.nbio.structure.align.gui.jmol.JmolPanel;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 
-
 public class WindowBuilder
 {
 	private JFrame frame;
@@ -23,6 +22,8 @@ public class WindowBuilder
 	static ReadXMLFile readXMLfile;
 	static PostBLASTQuery postblastquery;
 	static String seq;
+	public String pdbId;
+	public Box molBox;
 	
 	public static String getSequence()
 	{
@@ -40,18 +41,10 @@ public class WindowBuilder
 			{
 				try
 				{
-					postblastquery = new PostBLASTQuery(seq);
-			    	readXMLfile = new ReadXMLFile();
-			    	System.out.println("\n"+readXMLfile.getPDBID());
-			        //String molName = readXMLfile.getPDBID();
-			        System.out.println("Type the name of molecular structure. (ex: 4HHB, 4EAR, 5UN5...)");
-			        //Scanner sc = new Scanner(System.in);
-			        //molName = sc.next();   
-			        //WindowBuilder wf = new WindowBuilder(molName);
-			        WindowBuilder window = new WindowBuilder();
+					WindowBuilder window = new WindowBuilder();
 					window.frame.setVisible(true);
-					
-				} catch (Exception e)
+				} 
+				catch (Exception e)
 				{
 					e.printStackTrace();
 				}
@@ -83,28 +76,60 @@ public class WindowBuilder
 			frame.setJMenuBar(menu);
 			
 			Container container = frame.getContentPane();
-			Box molBox = Box.createVerticalBox();
+			molBox = Box.createVerticalBox();
+			molBox.setPreferredSize(new Dimension(400, 400));
 			Box molNameBox = Box.createHorizontalBox();
 			
 			Font font = new Font("Arial", Font.PLAIN, 20);
-			
-			Structure struc = StructureIO.getStructure(readXMLfile.getPDBID());
-			jmolPanel = new JmolPanel();
-			jmolPanel.setStructure(struc);
-			jmolPanel.setPreferredSize(new Dimension(100, 400));
-			molBox.add(jmolPanel);
-			
 			JLabel molNameLabel = new JLabel("Mol Name: ");
 	        molNameLabel.setFont(font);
 	        molNameLabel.setPreferredSize(new Dimension(250,50));
 			
+	        jmolPanel = new JmolPanel();
+	        jmolPanel.setPreferredSize(new Dimension(400, 400));
+	        molBox.add(jmolPanel);
+	        
 			molNameBox.setMaximumSize(new Dimension(Short.MAX_VALUE, 50));
 	        molNameBox.add(molNameLabel);
 	        molBox.add(molNameBox);
-	        
+			
+			JPanel panel = new JPanel();
+			frame.getContentPane().add(panel, BorderLayout.NORTH);
+			
+			textField = new JTextField();
+			panel.add(textField);
+			textField.setColumns(30);
+			seq = textField.getText();
+					
+			JButton btnNewButton = new JButton("Click");
+			panel.add(btnNewButton);
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent event) {
+					//JOptionPane.showMessageDialog(null, textField.getText());
+					try
+					{
+						String seq = textField.getText();
+						System.out.println(seq);
+						postblastquery = new PostBLASTQuery(seq);
+				    	readXMLfile = new ReadXMLFile();
+				    	//pdbId = readXMLfile.getPDBID();
+				    	System.out.println("\n"+readXMLfile.getPDBID());
+				        System.out.println("Type the name of molecular structure. (ex: 4HHB, 4EAR, 5UN5...)");				
+				    	Structure struc = StructureIO.getStructure(readXMLfile.getPDBID());
+						jmolPanel.setStructure(struc);
+						
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
+			});
+			
+			
 	        final JTextField molNameText = new JTextField();
 	        molNameText.setBackground(Color.WHITE);
-	        molNameText.setText(readXMLfile.getPDBID());
+	        molNameText.setText(pdbId);
 	        molNameText.setFont(font);
 	        molNameText.setPreferredSize(new Dimension(250, 50));
 	        molBox.add(molNameText);
@@ -123,29 +148,16 @@ public class WindowBuilder
 	              
 	           }
 	        });
-	        molBox.add(molChange);
+	        
+	       
+	        //molBox.add(molChange);
 	
 	        container.add(molBox);
 	        
 	        frame.pack();
 	        frame.setVisible(true);
 	        
-			JPanel panel = new JPanel();
-			frame.getContentPane().add(panel, BorderLayout.NORTH);
-			
-			textField = new JTextField();
-			panel.add(textField);
-			textField.setColumns(30);
-			seq = textField.getText();
-					
-			JButton btnNewButton = new JButton("Click");
-			panel.add(btnNewButton);
-			btnNewButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					//JOptionPane.showMessageDialog(null, textField.getText());
-					System.out.println(textField.getText());
-				}
-			});
+	
 		}
 		catch(Exception e)
 		{

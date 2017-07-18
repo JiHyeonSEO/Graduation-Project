@@ -26,7 +26,6 @@ class Descending implements Comparator<Double>
 	
 }
 
-
 public class ReadXMLFile
 {
 	public String[] pdbIDArray;
@@ -40,36 +39,11 @@ public class ReadXMLFile
 		return nValue.getNodeValue();
 	}
 	
-	/*
-	public static void main(String args[]){
-		
-		try{
-			File XMLFile = new File("C:\\16OODP\\eclipse\\workspace\\PDBTest\\test.xml");
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(XMLFile);
-			doc.getDocumentElement().normalize();
-			
-			NodeList nList = doc.getElementsByTagName("Hit");
-			String[] pdbIDArray = new String[nList.getLength()];
-			for(int i = 0; i < nList.getLength(); i++){
-				Node nNode = nList.item(i);
-				if(nNode.getNodeType() == Node.ELEMENT_NODE){
-					Element eElement = (Element)nNode;
-					//System.out.println(getTagValue("Hit_def", eElement).substring(0, 4));
-					pdbIDArray[i] = getTagValue("Hit_def", eElement).substring(0, 4);
-					System.out.println(pdbIDArray[i]);
-				}
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	*/
 	public ReadXMLFile()
 	{
-		try{
-			File XMLFile = new File("C:\\16OODP\\eclipse\\workspace\\PDB\\test1.xml");
+		try
+		{
+			File XMLFile = new File("C:\\16OODP\\eclipse\\workspace\\PDB\\test.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(XMLFile);
